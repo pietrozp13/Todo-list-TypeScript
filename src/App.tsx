@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+import TodoItem from "./components/TodoItem";
+import InputTodo from "./components/InputTodo";
+
+interface Props {}
+
+const App = (props: Props) => {
+  const [todos, setTodos] = useState<TodoInterface[]>([]);
+
+  const addTodo = (textParam: string) => {
+    setTodos([
+      ...todos,
+      { text: textParam, done: false, id: todos.length + 1 }
+    ]);
+  };
+
+  const setDone = (idParam: number) => {
+    const newTodos = todos.map(todo => {
+      if (todo.id === idParam) {
+        return { ...todo, done: !todo.done };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>To do list</h1>
+      {todos.map(todo => {
+        return <TodoItem setDone={setDone} todo={todo} />;
+      })}
+      <InputTodo addTodo={addTodo} />
     </div>
   );
-}
+};
 
 export default App;
